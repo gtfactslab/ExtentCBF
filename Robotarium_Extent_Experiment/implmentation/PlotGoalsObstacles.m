@@ -1,12 +1,5 @@
 function PlotGoalsObstacles()
 
-%     plot_ellipse(P1, c1, c2, 'b');
-% %     dim = [.62 .31 .3 .3];
-% %     str = 'Safe Set';
-% %     %annotation('textbox',dim,'String',str,'FitBoxToText','on','EdgeColor','none');
-% %     text(0.5, 0.6, str, 'Color','black','FontSize',14, 'FontWeight', 'bold');
-%     hold on   
-
     p = 4;
     sigma = [1, 0.4, pi/20];
     theta_k = pi/2;
