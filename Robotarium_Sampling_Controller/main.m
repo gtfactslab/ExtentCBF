@@ -3,7 +3,7 @@
 % NOTE: Please run the "init.m" file from the Robotarium package prior to
 %       executing this code
 % Authors: Mohit Srinivasan, Matt Abate, Gustav Nilsson, and Samuel Coogan
-% 01/20/2020
+% 03/07/2020
 
 clear all;
 close all;
