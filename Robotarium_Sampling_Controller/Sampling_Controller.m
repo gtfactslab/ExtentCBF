@@ -1,26 +1,21 @@
-function [LgE, min_E, y] = Sampling_Controller(x, u_nom, L_Edot, L_h)
+function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, L_Edot, L_h)
     
-    % Parameters for the Lp safe set, Extent Set and sampling controller
-    gamma = 0.1;
-    tau = pi/100;
-    P_safe = [1/0.8^2 0; 0 1/0.8^2];
+    % Parameters for the safe set, extent Set and sampling controller
+    gamma = 0.8;
+    tau = pi/2500;
+    P_safe = [1/1^2 0; 0 1/0.8^2];
     c1 = 0; c2 = 0;
     C = [c1; c2];
     
     shape = [1.5, 0; 0, 2];
-    
     th = 0:tau:2*pi;
-    
-    H = eye(2);
-                                    
+    H = eye(2);                              
     a = [];
     b = [];
     E_sys = [];
     
     phi = x(3);
-    rot = [cos(phi) sin(phi); -sin(phi) cos(phi)];
-    drot = [-sin(phi) cos(phi); -cos(phi) -sin(phi)];
-    P = rot'*shape*rot;
+    rot = [cos(phi) sin(phi); -sin(phi) cos(phi)]*[0 1; -1 0];
 
     % Sampling based constraints       
     for i=1:length(th)
@@ -46,6 +41,7 @@ function [LgE, min_E, y] = Sampling_Controller(x, u_nom, L_Edot, L_h)
     % Solve QP
     min_E = min(E_sys);
     opts = optimoptions(@quadprog, 'Display', 'off', 'TolFun', 1e-5, 'TolCon', 1e-4);
+    tic
     y = quadprog(sparse(H), double(-2*u_nom'), a, b, [], [], [], [], [], opts);  
-        
+    comp_time = toc;
 end
