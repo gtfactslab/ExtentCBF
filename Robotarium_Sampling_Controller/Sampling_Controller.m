@@ -2,7 +2,7 @@ function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, L_Edot, L_h)
     
     % Parameters for the safe set, extent Set and sampling controller
     gamma = 0.8;
-    tau = pi/2500;
+    tau = pi/1000;
     P_safe = [1/1^2 0; 0 1/0.8^2];
     c1 = 0; c2 = 0;
     C = [c1; c2];
