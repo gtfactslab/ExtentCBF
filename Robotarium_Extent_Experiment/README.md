@@ -1,4 +1,4 @@
-# Sampling-Based Controller in Robotarium
+# Robotarium Implementation
 
 This is the code for the sampling-based controller and SOS-based controller implemented on a differential drive robot in the Robotarium. To execute the code, please follow the instructions below:
   
