@@ -1,7 +1,7 @@
 # Sampling-Based Controller in Robotarium
 
-This is the code for the sampling based controller implemented on a differential drive robot in the Robotarium. To execute the code:
+This is the code for the sampling-based controller and SOS-based controller implemented on a differential drive robot in the Robotarium. To execute the code, please follow the instructions below:
   
-  1. Run the init.m file
-  2. Go to the "implementation" folder
-  3. Run the "main.m" file
+* Run the init.m file
+* Go to the "Sampling-based Controller" folder to run the sampling based framework, or the "SOS-based Controller" folder to run the SOS-based framework
+* Run the "main.m" file for the respective methods
