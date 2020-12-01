@@ -1,18 +1,14 @@
-function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A)
-    
-    global shape P_safe
-    
+function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A, shape, P_safe, gamma, N)
+        
     % Parameters for the safe set, extent set and sampling controller 
-    gamma = 0.4;
-    tau = pi/50;
+   
     c1 = 0; c2 = 0;
     C = [c1; c2];
     
+    tau = (2*pi/N);
     th = 0:tau:2*pi;
     H = eye(2);
     a = []; b = [];
-    s1 = 0.1*shape(1, 1);
-    s2 = 0.1*shape(2, 2);
     E_sys = [];
     
     phi = x(3);
@@ -25,8 +21,9 @@ function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A)
     % Sampling based constraints
     for i=1:length(th)
         
-        test_units = [sqrt(abs(cos(th(i))))*s1*sign(cos(th(i))); ...
-                        sqrt(abs(sin(th(i))))*s2*sign(sin(th(i)))];
+        test_units = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))); ...
+                        sqrt(abs(sin(th(i))))*shape(2, 2)*sign(sin(th(i)))];
+                                        
                     
         testy = (test_units'*rot)' + x(1:2);
         del = (x(1:2) - testy).^2;
