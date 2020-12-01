@@ -1,12 +1,7 @@
-function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A, shape, P_safe, gamma, N)
+function [y, comp_time, min_E] = Sampling_Controller(x, u_nom, B, A, shape, P_safe, gamma, N, tau)
         
     % Parameters for the safe set, extent set and sampling controller 
-   
-    c1 = 0; c2 = 0;
-    C = [c1; c2];
-    
-    tau = (2*pi/N);
-    th = 0:tau:2*pi;
+    th = 0:(2*pi/N):2*pi;
     H = eye(2);
     a = []; b = [];
     E_sys = [];
@@ -23,8 +18,7 @@ function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A, shape,
         
         test_units = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))); ...
                         sqrt(abs(sin(th(i))))*shape(2, 2)*sign(sin(th(i)))];
-                                        
-                    
+                                            
         testy = (test_units'*rot)' + x(1:2);
         del = (x(1:2) - testy).^2;
         
@@ -34,11 +28,10 @@ function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A, shape,
         
         LgE = dEdx * [cos(phi), 0; sin(phi), 0; 0, 1];
         
-        h_safe_of_y = 1 - (testy - C)'*P_safe*(testy - C);
+        h_safe_of_y = 1 - (testy)'*P_safe*(testy);
         E_sys = [E_sys, h_safe_of_y];
         a = [a; -LgE];
         b = [b; gamma*(h_safe_of_y) - (gamma*A + B)*tau];
-        
     end
     
     % Solve QP
@@ -47,5 +40,4 @@ function [LgE, min_E, y, comp_time] = Sampling_Controller(x, u_nom, B, A, shape,
     tic
     y = quadprog(sparse(H), double(-2*u_nom'), a, b, [], [], [], [], [], opts);  
     comp_time = toc;
-    
 end

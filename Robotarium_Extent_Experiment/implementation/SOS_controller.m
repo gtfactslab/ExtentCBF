@@ -1,7 +1,4 @@
-function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta, y, u_sim, t)
-    
-    global P_safe
-    
+function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta, y, u_sim, t, P_safe)
     % Setup SOS
     sostoolsoptions.solver = 'sdpt3';
     sostoolsoptions.frlib.approx = 'dd';
@@ -24,7 +21,7 @@ function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta
     prog = sosdecvar(prog,t);
     [prog,s2] = sossosvar(prog,monos);
     [prog,s3] = sossosvar(prog,monos);
-    prog = sosineq(prog, LgV*u + 0.1*h_of_y^6 + 0.1.*V - s2*h_of_y - s3*V);
+    prog = sosineq(prog, LgV*u + 0.1*h_of_y.^6 + 0.1.*V - s2*h_of_y - s3*V);
     prog = sossetobj(prog,t);
     M = [eye(2), u; u',t-vd'*vd+2*vd'*u];
     prog = sosmatrixineq(prog,M,'quadraticMineq');
