@@ -35,7 +35,7 @@ b_r = b - extent_max_radius;
 P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 
 % Which controller we want to use
-cont = 'point'; % Pick 'extent', 'sos', or 'point'
+cont = 'extent'; % Pick 'extent', 'sos', or 'point'
 
 %% Setup for the SAMPLE based controller
 % Number of samples
@@ -146,7 +146,7 @@ for t = 0:iterations
         % Sampling based controller 
         [dxu, comp_time, ext] = controller(x, vel_des);
         E = [E, ext];
-        dxu = 0.25*dxu;
+        dxu = 0.1*dxu;
     elseif strcmp(cont, 'sos')
         % SOS controller 
         [dxu, comp_time] = controller(x, vel_des);

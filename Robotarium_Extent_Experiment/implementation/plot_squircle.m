@@ -17,5 +17,5 @@ function h = plot_squircle(x_curr, shape)
         holder = [holder; [x_unit, y_unit]*rot + [x_curr(1),x_curr(2)]]; 
     end
     
-    h = fill(holder(:, 1), holder(:, 2),[.447,.643,.831],'EdgeColor','none','FaceAlpha',0.3);
+    h = fill(holder(:, 1), holder(:, 2),[.447,.643,.831],'EdgeColor','none','FaceAlpha',0.7);
 end
