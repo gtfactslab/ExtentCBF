@@ -35,7 +35,7 @@ b_r = b - extent_max_radius;
 P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 
 % Which controller we want to use
-cont = 'extent'; % Pick 'extent', 'sos', or 'point'
+cont = 'sos'; % Pick 'extent', 'sos', or 'point'
 
 %% Setup for the SAMPLE based controller
 % Number of samples
@@ -92,9 +92,8 @@ if strcmp(cont, 'sos')
     del = ([x1; x2] - y);
     rot = [cos(theta), sin(theta) ; -sin(theta), cos(theta)];
     new_coords = shape*rot*del;                                           
-    Vsym = sum(new_coords.^4) - (max(max(shape)))^4; %This might be wrong                               
+    Vsym = sum(new_coords.^4) - (min(min(shape)))^4; %This might be wrong                             
     diffVsym = [diff(Vsym,x1), diff(Vsym,x2), diff(Vsym, theta)];
-
     controller = @(x, vel_des) SOS_controller(x, vel_des, Vsym, diffVsym, x1, x2, theta, y, u_sim, t, P_safe); 
 end
 
