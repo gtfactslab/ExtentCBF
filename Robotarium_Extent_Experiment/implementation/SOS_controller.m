@@ -7,6 +7,8 @@ function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta
     % Parameters for safe set, Extent Set and sampling controller
     vd = u_nom;    
     V = subs(Vsym,{x1, x2, theta},{x(1),x(2), x(3)});
+    V
+    keyboard
     dVdx = subs(diffVsym,{x1, x2, theta},{x(1),x(2), x(3)});
     LgV = dVdx * [cos(x(3)), 0; sin(x(3)), 0; 0, 1];
     LgV = vpa(LgV);
