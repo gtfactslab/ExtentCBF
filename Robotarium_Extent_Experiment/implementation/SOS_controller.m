@@ -19,9 +19,11 @@ function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta
     prog = sosprogram(y);
     prog = sosdecvar(prog,u);
     prog = sosdecvar(prog,t);
-    [prog,s2] = sossosvar(prog,monos);
-    [prog,s3] = sossosvar(prog,monos);
-    prog = sosineq(prog, LgV*u + 0.1*h_of_y.^6 + 0.1.*V - s2*h_of_y - s3*V);
+    [prog,s2] = sossosvar(prog,monomials(y, [0 1 2]));
+    [prog,s3] = sossosvar(prog,monomials(y, [0 1 2]));
+    prog = sosineq(prog, LgV*u + 1.*h_of_y + 1.*V - 1.*s2*h_of_y - 1.*s3*V);
+    %prog = sosineq(prog, LgV*u + 1.*h_of_y + 1.*V - s2*h_of_y);
+
     prog = sossetobj(prog,t);
     M = [eye(2), u; u',t-vd'*vd+2*vd'*u];
     prog = sosmatrixineq(prog,M,'quadraticMineq');
