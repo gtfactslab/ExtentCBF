@@ -6,4 +6,4 @@ This is the code for the sampling-based controller and SOS-based controller impl
 * Go to the "Sampling-based Controller" folder to run the sampling based framework, or the "SOS-based Controller" folder to run the SOS-based framework
 * Run the "main.m" file for the respective methods
 
-NOTE: The SOS-based controller code requires SOSTOOLS with solver SDPT3.
+NOTE: The SOS controller code requires SOSTOOLS with solver SDPT3. It has only been varified to work with SOSTOOLS v 3.03, SDPT3 v 4.0 and MATLAB R2019b.

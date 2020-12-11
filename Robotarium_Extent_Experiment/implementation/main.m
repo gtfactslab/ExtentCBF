@@ -40,7 +40,7 @@ cont = 'point'; % Pick 'extent', 'sos', or 'point'
 %% Setup for the SAMPLE based controller
 % Number of samples
 if strcmp(cont,'extent')
-    num_samp = 2000;
+    num_samp = 2500;
 
     % Gamma paramter for the sampling based
     gamma = 0.06;
@@ -78,8 +78,7 @@ if strcmp(cont,'extent')
 
     A = norm(dh_dx, inf); %*0.01;
     B = norm(dE2_dxdy, inf)*norm([1 0; 1 0; 0 1], inf); %*0.1;
-    E = [];
-    U = [];
+
 
 
     controller = @(x, vel_des) Sampling_Controller(x, vel_des, B, A, shape, P_safe, gamma, num_samp, tau);
@@ -92,15 +91,20 @@ if strcmp(cont, 'sos')
     del = ([x1; x2] - y);
     rot = [cos(theta), sin(theta) ; -sin(theta), cos(theta)];
     new_coords = shape*rot*del;                                           
+
     Vsym = sum(new_coords.^4) - (shape(1,1)*shape(2,2))^4;                           
+
     diffVsym = [diff(Vsym,x1), diff(Vsym,x2), diff(Vsym, theta)];
     controller = @(x, vel_des) SOS_controller(x, vel_des, Vsym, diffVsym, x1, x2, theta, y, u_sim, t, P_safe); 
+    keyboard
+
 end
 
 %% Setup for the point controller
 if strcmp(cont, 'point')
     gamma = 0.6;
-    controller = @(x, vel_des) Point_controller(x, vel_des, P_safe_r, gamma);
+    sampeles = 2500; % Samples for computing E(x,y)
+    controller = @(x, vel_des) Point_controller(x, vel_des, P_safe_r, gamma, shape, N);
 end
 
 %% Start the robotarium simulation
@@ -135,7 +139,7 @@ T_comp = 0;
 T = [];
 t_sim = 0;
 U = [];
-
+E = [];
 for t = 0:iterations
     delete(vol);
     x = r.get_poses();
@@ -145,15 +149,19 @@ for t = 0:iterations
         % Sampling based controller 
         [dxu, comp_time, ext] = controller(x, vel_des);
         E = [E, ext];
-        dxu = 0.1*dxu;
-        dxu
+
+        %dxu = 0.1*dxu; %Only needed in robotarium
+        dxu = 0.25*dxu; 
+
     elseif strcmp(cont, 'sos')
         % SOS controller 
         [dxu, comp_time] = controller(x, vel_des);
-        dxu = 1e5*double(dxu);
+        dxu = double(dxu);
+        
     elseif strcmp(cont, 'point')
         % Single point controller
-        [dxu, comp_time] = controller(x, vel_des);
+        [dxu, comp_time, ext] = controller(x, vel_des);
+        E = [E, ext];
         dxu = 0.25*dxu;
     elseif strcmp(cont, 'none')
         dxu = vel_des;
