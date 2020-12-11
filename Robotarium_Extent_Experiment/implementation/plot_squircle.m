@@ -1,5 +1,4 @@
 function h = plot_squircle(x_curr, shape)  
-
     % Sample the squircle
     th = 0:pi/20:2*pi;
     

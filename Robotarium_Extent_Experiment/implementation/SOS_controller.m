@@ -33,5 +33,4 @@ function [y, comp_time] = SOS_controller(x, u_nom, Vsym, diffVsym, x1, x2, theta
     prog = sossolve(prog,sostoolsoptions);
     y = sosgetsol(prog,u);
     comp_time = toc;
-    
 end

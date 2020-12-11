@@ -1,12 +1,16 @@
 % Extent-Compatible Control Barrier Functions
 % NOTE: Please run the "init.m" file from the Robotarium package prior to
 %       executing this code
+% Choose between the different control strategies by changing the caribale cont
 % Authors: Mohit Srinivasan, Matt Abate, Gustav Nilsson, and Samuel Coogan
-% Date Modified: 03/25/2020
+% Date Modified: 12/11/2020
 
 clear all;
 close all;
 clc;
+
+% Which controller we want to use
+cont = 'point'; % Pick 'extent', 'sos', or 'point'
 
 % Parameters 
 % The domain
@@ -34,8 +38,6 @@ a_r = a - extent_max_radius;
 b_r = b - extent_max_radius;
 P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 
-% Which controller we want to use
-cont = 'point'; % Pick 'extent', 'sos', or 'point'
 
 %% Setup for the SAMPLE based controller
 % Number of samples
@@ -78,8 +80,6 @@ if strcmp(cont,'extent')
 
     A = norm(dh_dx, inf); %*0.01;
     B = norm(dE2_dxdy, inf)*norm([1 0; 1 0; 0 1], inf); %*0.1;
-
-
 
     controller = @(x, vel_des) Sampling_Controller(x, vel_des, B, A, shape, P_safe, gamma, num_samp, tau);
 end
@@ -149,9 +149,8 @@ for t = 0:iterations
         % Sampling based controller 
         [dxu, comp_time, ext] = controller(x, vel_des);
         E = [E, ext];
-
-        %dxu = 0.1*dxu; %Only needed in robotarium
-        dxu = 0.25*dxu; 
+        %dxu = 0.1*dxu; % Only needed in robotarium
+        dxu = 0.25*dxu; % Gives faster simulation
 
     elseif strcmp(cont, 'sos')
         % SOS controller 
@@ -167,8 +166,7 @@ for t = 0:iterations
         dxu = vel_des;
         comp_time= 0;
     end
-    
-    
+
     T_comp = T_comp + comp_time;
     U = [U, norm(dxu)];
     
@@ -185,6 +183,5 @@ for t = 0:iterations
     vol = plot_squircle(x, shape);
     drawnow 
 end
-
 
 r.debug();

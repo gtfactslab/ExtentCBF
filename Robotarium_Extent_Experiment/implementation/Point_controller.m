@@ -16,9 +16,8 @@ function [y, comp_time, min_E] = Point_controller(x, u_nom, P_safe, gamma, shape
     tic
     y = quadprog(sparse(H), double(-2*u_nom'), a, b, [], [], [], [], [], opts);
     comp_time = toc;
-    
-    
   
+    % Compute the cloest distance to the boundary
     th = 0:(2*pi/N):2*pi;
     phi = x(3);
     rot = [-sin(phi) cos(phi); -cos(phi) -sin(phi)];
