@@ -10,7 +10,7 @@ close all;
 clc;
 
 % Which controller we want to use
-cont = 'point'; % Pick 'extent', 'sos', or 'point'
+cont = 'extent'; % Pick 'extent', 'sos', or 'point'
 
 % Parameters 
 % The domain
@@ -42,25 +42,39 @@ P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 %% Setup for the SAMPLE based controller
 % Number of samples
 if strcmp(cont,'extent')
-    num_samp = 2500;
+    num_samp = 20000;
 
     % Gamma paramter for the sampling based
     gamma = 0.06;
 
     % Determine the sampling distance (tau)
     th = 0:(2*pi/num_samp):2*pi;
-    latest_sampling_point = [sqrt(abs(cos(th(1))))*shape(1, 1)*sign(cos(th(1))); ...
-        sqrt(abs(sin(th(1))))*shape(2, 2)*sign(sin(th(1)))];
-    tau = inf;
-    for i=2:length(th)
-        new_sampling_point = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))); ...
+    sampling_points = [];
+    tau = 0;
+    for i=1:length(th)
+        
+        new_sampling_point = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))) ...
             sqrt(abs(sin(th(i))))*shape(2, 2)*sign(sin(th(i)))];
 
-        if norm(latest_sampling_point-new_sampling_point) < tau
-            tau = norm(latest_sampling_point-new_sampling_point);
-        end
-        latest_sampling_point = new_sampling_point;
+        sampling_points = [sampling_points; new_sampling_point];
+        
+        %if norm(latest_sampling_point-new_sampling_point) > tau
+        %    tau = norm(latest_sampling_point-new_sampling_point);
+        %end
+        %latest_sampling_point = new_sampling_point;
     end
+    distances = [];
+    for i=1:length(th)
+        min_distance = inf;
+        for j=1:length(th)
+           if i ~=j && sqrt((sampling_points(i,1)-sampling_points(j,1))^2 + (sampling_points(i,2)-sampling_points(j,2))^2) < min_distance
+                min_distance = sqrt((sampling_points(i,1)-sampling_points(j,1))^2 +  (sampling_points(i,2)-sampling_points(j,2))^2);
+           end
+        end
+        distances = [distances; min_distance];
+    end
+    
+    tau = max(distances)
 
     % Determine the constants
     X_dom = [x1_dom; x2_dom];
