@@ -10,7 +10,7 @@ close all;
 clc;
 
 % Which controller we want to use
-cont = 'point'; % Pick 'extent', 'sos', or 'point'
+cont = 'extent'; % Pick 'extent', 'sos', or 'point'
 
 % Parameters 
 % The domain
@@ -42,7 +42,7 @@ P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 %% Setup for the SAMPLE based controller
 % Number of samples
 if strcmp(cont,'extent')
-    num_samp = 2500;
+    num_samp = 500;
 
     % Gamma paramter for the sampling based
     gamma = 0.06;
@@ -61,6 +61,9 @@ if strcmp(cont,'extent')
         end
         latest_sampling_point = new_sampling_point;
     end
+    
+    
+    tau
 
     % Determine the constants
     X_dom = [x1_dom; x2_dom];
