@@ -1,6 +1,5 @@
-function [y, comp_time, min_E] = Sampling_Controller(x, u_nom, B, A, shape, P_safe, gamma, N, tau)    
+function [y, comp_time, min_E] = Sampling_Controller(x, u_nom, B, A, shape, P_safe, gamma, th, tau)    
     % Parameters for the safe set, extent set and sampling controller 
-    th = 0:(2*pi/N):2*pi;
     H = eye(2);
     a = []; b = [];
     E_sys = [];

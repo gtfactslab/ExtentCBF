@@ -42,39 +42,43 @@ P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 %% Setup for the SAMPLE based controller
 % Number of samples
 if strcmp(cont,'extent')
-    num_samp = 20000;
+    num_samp = 2000;
 
+    tau = 0.0004;
     % Gamma paramter for the sampling based
     gamma = 0.06;
 
     % Determine the sampling distance (tau)
-    th = 0:(2*pi/num_samp):2*pi;
-    sampling_points = [];
-    tau = 0;
-    for i=1:length(th)
-        
-        new_sampling_point = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))) ...
-            sqrt(abs(sin(th(i))))*shape(2, 2)*sign(sin(th(i)))];
-
-        sampling_points = [sampling_points; new_sampling_point];
-        
-        %if norm(latest_sampling_point-new_sampling_point) > tau
-        %    tau = norm(latest_sampling_point-new_sampling_point);
-        %end
-        %latest_sampling_point = new_sampling_point;
-    end
-    distances = [];
-    for i=1:length(th)
-        min_distance = inf;
-        for j=1:length(th)
-           if i ~=j && sqrt((sampling_points(i,1)-sampling_points(j,1))^2 + (sampling_points(i,2)-sampling_points(j,2))^2) < min_distance
-                min_distance = sqrt((sampling_points(i,1)-sampling_points(j,1))^2 +  (sampling_points(i,2)-sampling_points(j,2))^2);
-           end
-        end
-        distances = [distances; min_distance];
-    end
+    %th = 0:(2*pi/num_samp):2*pi;
+    th = generate_samples(shape, tau);
     
-    tau = max(distances)
+    disp(['Number of samples: ', num2str(numel(th))]);
+
+%     sampling_points = []
+%     for i=1:length(th)
+%         
+%         new_sampling_point = [sqrt(abs(cos(th(i))))*shape(1, 1)*sign(cos(th(i))) ...
+%             sqrt(abs(sin(th(i))))*shape(2, 2)*sign(sin(th(i)))];
+% 
+%         sampling_points = [sampling_points; new_sampling_point];
+%         
+%         %if norm(latest_sampling_point-new_sampling_point) > tau
+%         %    tau = norm(latest_sampling_point-new_sampling_point);
+%         %end
+%         %latest_sampling_point = new_sampling_point;
+%     end
+%     distances = [];
+%     for i=1:length(th)
+%         min_distance = inf;
+%         for j=1:length(th)
+%            if i ~=j && sqrt((sampling_points(i,1)-sampling_points(j,1))^2 + (sampling_points(i,2)-sampling_points(j,2))^2) < min_distance
+%                 min_distance = sqrt((sampling_points(i,1)-sampling_points(j,1))^2 +  (sampling_points(i,2)-sampling_points(j,2))^2);
+%            end
+%         end
+%         distances = [distances; min_distance];
+%     end
+%     
+    
 
     % Determine the constants
     X_dom = [x1_dom; x2_dom];
@@ -95,7 +99,7 @@ if strcmp(cont,'extent')
     A = norm(dh_dx, inf); %*0.01;
     B = norm(dE2_dxdy, inf)*norm([1 0; 1 0; 0 1], inf); %*0.1;
 
-    controller = @(x, vel_des) Sampling_Controller(x, vel_des, B, A, shape, P_safe, gamma, num_samp, tau);
+    controller = @(x, vel_des) Sampling_Controller(x, vel_des, B, A, shape, P_safe, gamma, th, tau);
 end
 %% Setup for the SOS controller
 if strcmp(cont, 'sos')
