@@ -42,9 +42,9 @@ P_safe_r = [1/a_r^2 0; 0 1/b_r^2];
 %% Setup for the SAMPLE based controller
 % Number of samples
 if strcmp(cont,'extent')
-    num_samp = 2000;
+    %num_samp = 2000;
 
-    tau = 0.0004;
+    tau = 0.002;
     % Gamma paramter for the sampling based
     gamma = 0.06;
 
@@ -201,5 +201,12 @@ for t = 0:iterations
     vol = plot_squircle(x, shape);
     drawnow 
 end
+
+disp(['Average computation time: ', num2str(T_comp/iterations)]);
+
+t = 0:1/30:iterations/30;
+
+figure(2)
+plot(t', E')
 
 r.debug();
