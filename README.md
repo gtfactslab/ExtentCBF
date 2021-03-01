@@ -1,5 +1,11 @@
 # Extent-Compatible Control Barrier Functions
 
+*Extent-compatible control barrier functions*,
+Mohit Srinivasan, Matthew Abate, Gustav Nilsson, Samuel Coogan,
+Systems & Control Letters, Volume 150, 2021. 
+[10.1016/j.sysconle.2021.104895](https://doi.org/10.1016/j.sysconle.2021.104895)
+
+
 This is code for the extent-compatible control barrier functions framework. This repository contains two implementations of the proposed framework in the Robotarium simulator:
 
 * A sum-of-squares (SOS) based approach
